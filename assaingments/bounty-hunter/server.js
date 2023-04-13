@@ -16,7 +16,16 @@ app.use('/bountys', require("./routes/bountysRouter.js"));
 app.use('/bosses', require('./routes/bossRouter.js'))
 
 //Connect to DB
-mongoose.connect(uri, console.log("Connected to the DB"));
+mongoose.set('strictQuery', true);
+const connectDB = async () => {
+    try{
+        const conn = mongoose.connect(process.env.MONGO_URI);
+        console.log(`MongoDB connected: ${conn.connection.host}`);
+    } catch {
+        console.log(err);
+        process.exit(1);
+    }
+}
 
 //error handler
 app.use((err, req, res, next) => {
@@ -24,16 +33,7 @@ app.use((err, req, res, next) => {
     return res.send({errMsg : err.message})
 })
 
-mongoose.set('strictQuery', false);
-const connectDB = async () => {
-    try{
-        const conn = await mongoose.connect(process.env.MONGO_URI);
-        console.log(`MongoDB connected: ${conn.connection.host}`);
-    } catch {
-        console.log(err);
-        process.exit(1);
-    }
-}
+
 
 // Server listen //
 connectDB().then(() => {
