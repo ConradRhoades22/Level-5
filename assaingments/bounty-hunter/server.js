@@ -24,6 +24,17 @@ app.use((err, req, res, next) => {
     return res.send({errMsg : err.message})
 })
 
+mongoose.set('strictQuery', false);
+const connectDB = async () => {
+    try{
+        const conn = await mongoose.connect(process.env.MONGO_URI);
+        console.log(`MongoDB connected: ${conn.connection.host}`);
+    } catch {
+        console.log(err);
+        process.exit(1);
+    }
+}
+
 // Server listen //
 connectDB().then(() => {
     app.listen(9000, () => {
