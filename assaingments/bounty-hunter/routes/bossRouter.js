@@ -1,4 +1,4 @@
-const express =require('express')
+const express = require('express')
 const bossRouter = express.Router()
 const Boss = require("../models/boss.js")
 
@@ -41,7 +41,7 @@ bossRouter.put("/bountysCompleted/:bossID", (req, res, next) => {
     )
 })
 
-//Get boss byt search terms
+//Get boss by search terms
 bossRouter.get("/search", (req, res, next) => {
     const { boss } = req.query
     const pattern = new RegExp(boss)

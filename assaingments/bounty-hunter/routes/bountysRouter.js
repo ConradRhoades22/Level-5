@@ -1,6 +1,7 @@
 const express = require('express')
 const bountysRouter = express.Router()
 const Bounty = require('../models/bounty.js')
+const bounty = require('../models/bounty.js')
 
 //Get all
 bountysRouter.get ("/", (req, res, next) => {
@@ -24,6 +25,7 @@ bountysRouter.get("/:bossID", (req, res, next) => {
         return res.status(200).send(Bounty)
     })
 })
+
 //Post one
 bountysRouter.post("/:bossID", (req, res, next) => {
     req.body.boss = req.params.bossID
@@ -33,20 +35,31 @@ bountysRouter.post("/:bossID", (req, res, next) => {
             res.status(500)
             return next(err)
         }
-        return res.status(201).send(savedBounty)
+    return res.status(201).send(savedBounty)
     })
 })
 
 
 // delete one
-bountysRouter.delete("/:bountysId",(req, res) =>{
-    Bounty .findOneAndDelete({_id: req.params.bountysId}, (err, deletedItem) =>{
-        if(err){
-            res.status(500)
-            return next(err)
-        }
-        return res.status(200).send(`Sucessfulyl deleted item ${deletedItem.title} from the database`)
-    })
+// bountysRouter.delete("/:bountysId",(req, res) =>{
+//     Bounty.findOneAndDelete({_id: req.params.bountysId}, (err, deletedItem) =>{
+//         if(err){
+//             res.status(500)
+//             return next(err)
+//         }
+//         return res.status(200).send(`Sucessfulyl deleted item ${deletedItem.title} from the database`)
+//     })
+// })
+
+
+//delete by boss
+bountysRouter.delete(["/:bountysId", "/:bossID"], (req, res, next) => {
+    Bounty.remove( {_id :{ $in: [
+        (req.params.bountysId),
+        (req.params.bossID),
+    ]}})
+})
+
 
 //update one
     bountysRouter.put("/:bountysId", (req, res, next) => {
@@ -63,7 +76,7 @@ bountysRouter.delete("/:bountysId",(req, res) =>{
             }
         )
     })
-})
+
 
 // get by type
 bountysRouter.get("/search/type", (req, res, next) => {

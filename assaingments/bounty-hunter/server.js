@@ -25,6 +25,8 @@ app.use((err, req, res, next) => {
 })
 
 // Server listen //
-app.listen(9000, () => {
-    console.log("this server is running on Port 9000")
-}) 
+connectDB().then(() => {
+    app.listen(9000, () => {
+        console.log("this server is running on Port 9000")
+    }) 
+})
